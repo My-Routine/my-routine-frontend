@@ -1,4 +1,6 @@
 <script setup>
+import { RouterLink } from 'vue-router';
+
 
 </script>
 
@@ -11,6 +13,9 @@
             <!-- <div><RouterLink>내 관심</RouterLink></div> -->
             <!-- <div><RouterLink>마이 루틴</RouterLink></div> -->
                 <div><RouterLink :to="{ name : 'makeSchedule' }">스케쥴 만들기</RouterLink></div>
+                <div><RouterLink :to="{ name : 'makeScheduleForm' }">스케줄 작성</RouterLink></div>
+                <div><RouterLink :to="{ name : 'getAllSchedule' }">공개 스케줄 목록</RouterLink></div>
+                
             <!-- <div><RouterLink>가이드</RouterLink></div> -->
         </div>
     </div>

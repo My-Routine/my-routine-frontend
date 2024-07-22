@@ -23,6 +23,17 @@ const router = createRouter({
       name: 'makeSchedule',
       component: () => import('@/views/ScheduleRegisterView.vue')
     },
+    {
+      path: '/schedule/registerform',
+      name: 'makeScheduleForm',
+      component: () => import('@/views/ScheduleRegisterFormView.vue')
+    },
+    {
+      path: '/schedule/getalls',
+      name: 'getAllSchedule',
+      component: () => import('@/views/getAllScheduleView.vue')
+    },
+    
   ]
 })
 
