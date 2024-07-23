@@ -15,16 +15,19 @@ const signUpForm = ref({
 const profileImg = ref(null);
 const handleFileUpload = (e) => {
     profileImg.value = e.target.files[0];
+    
+    alert(profileImg.value);
 }
 
 const signUp = () => {
     const formData = new FormData();
+    alert(profileImg.value)
     for(const key in signUpForm.value){
         formData.append(key, signUpForm.value[key]);   
     }
-    formData.append('profileImg', profileImg);
+    formData.append('profileImg', profileImg.value);
     for(const i of formData.entries()){
-        console.dir(i[0] + " //// " + i[1])
+        console.log(i[0] + " //// " + i[1])
     }
  
     try{
