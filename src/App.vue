@@ -3,13 +3,12 @@ import { RouterLink, RouterView } from 'vue-router'
 import Navbar from '@/components/Navbar.vue'
 import Sidebar from '@/components/Sidebar.vue'
 
-const sideBarWidth = '200px'
 </script>
 
 <template>
   <div class="d-flex">
-    <Sidebar :style="{ 'width': sideBarWidth }" />
-    <div :style="{ 'width': `calc(100vw - ${ sideBarWidth })` }">
+    <Sidebar style="width: 200px;" />
+    <div style="width:calc(100vw - 200px);">
       <Navbar/>
       <RouterView/>
     </div>

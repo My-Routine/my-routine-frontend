@@ -24,14 +24,19 @@ const router = createRouter({
       component: () => import('@/views/ScheduleRegisterView.vue')
     },
     {
-      path: '/schedule/registerform',
-      name: 'makeScheduleForm',
-      component: () => import('@/views/ScheduleRegisterFormView.vue')
+      path: '/schedule/:scheduleId/update',
+      name: 'updateSchedule',
+      component: () => import('@/views/ScheduleRegisterView.vue')
     },
     {
-      path: '/schedule/getalls',
+      path: '/schedule/detalls',
       name: 'getAllSchedule',
-      component: () => import('@/views/getAllScheduleView.vue')
+      component: () => import('@/views/ScheduleListView.vue')
+    },
+    {
+      path: '/my/favorite',
+      name: 'myFavorite',
+      component: () => import('@/views/ScheduleListView.vue')
     },
     
   ]

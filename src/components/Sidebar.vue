@@ -10,20 +10,35 @@ import { RouterLink } from 'vue-router';
         <div class="logo d-flex justify-content-center align-items-center"><RouterLink :to="{ name : 'home'}">Logo Img</RouterLink></div>
         <!-- nav -->
         <div class="menu">
-            <!-- <div><RouterLink>내 관심</RouterLink></div> -->
             <!-- <div><RouterLink>마이 루틴</RouterLink></div> -->
-                <div><RouterLink :to="{ name : 'makeSchedule' }">스케쥴 만들기</RouterLink></div>
-                <div><RouterLink :to="{ name : 'makeScheduleForm' }">스케줄 작성</RouterLink></div>
-                <div><RouterLink :to="{ name : 'getAllSchedule' }">공개 스케줄 목록</RouterLink></div>
-                
-            <!-- <div><RouterLink>가이드</RouterLink></div> -->
+            <div class="pink">
+                <RouterLink :to="{ name : 'makeSchedule' }">스케쥴 만들기</RouterLink>
+            </div>
+            <div class="pink">
+                <RouterLink :to="{ name : 'makeSchedule' }">내 스케줄 목록</RouterLink>
+            </div>
+            <div class="pink">
+                <RouterLink :to="{ name : 'getAllSchedule' }">공개 스케줄 목록</RouterLink>
+            </div>
+            <div class="pink">
+                <RouterLink :to="{ name : 'myFavorite' }">내 관심</RouterLink>
+            </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+.pink {
+    background-color: rgb(255,172,172);
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
 .container {
-    background-color: rgb(40, 109, 187); 
+    background-color: rgb(156,196,255); 
     height: 100vh;
 }
 

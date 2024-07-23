@@ -47,7 +47,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="d-flex" :style="{ 'width':'100%', 'height' : `100%`}">
+    <div class="d-flex">
         <!-- 요일 -->
         <div>
             <div class="mb-3" :style="{ 'min-width': width, 'min-height': '30px' }">&nbsp;</div>
@@ -78,13 +78,4 @@ onMounted(() => {
 
 <style scoped>
 
-/*
-.container table thead { float:left; }
-.container table thead tr, 
-.container table thead tr th { display:block; }
-
-.container table tbody { display:block; oveflow-x:hidden; white-space:nowrap; }
-.container table tbody tr { display:inline-block; }
-.container table tbody tr td { display:block;}
-*/
 </style>
