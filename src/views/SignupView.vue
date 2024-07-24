@@ -5,7 +5,7 @@ import axios from 'axios';
 const { VITE_REQUEST_URL } = import.meta.env;
 
 const signUpForm = ref({
-    img : "",
+    img : null,
     email : "",
     password : "",
     nickname : "",
@@ -19,26 +19,21 @@ const handleFileUpload = (e) => {
     alert(profileImg.value);
 }
 
-const signUp = () => {
+const signUp = async() => {
     const formData = new FormData();
-    alert(profileImg.value)
     for(const key in signUpForm.value){
         formData.append(key, signUpForm.value[key]);   
     }
     formData.append('profileImg', profileImg.value);
-    for(const i of formData.entries()){
-        console.log(i[0] + " //// " + i[1])
-    }
- 
     try{
-
-        const response = axios.post(`${VITE_REQUEST_URL}/users`,formData, {
+        const response = await axios.post(`${VITE_REQUEST_URL}/users`,formData, {
             headers: {
                 'Content-Type' : 'multipart/form-data'
             } 
         });
         if(response.status == 200){
-            alert('회원가입이 완료되었습니다.');
+            alert('회원가입이 완료되었습니다.\n로그인 후 이용해주세요');
+            window.location.href='/login'
         }
     }catch(err){
         if(err.response && err.response.status == 400){
@@ -55,7 +50,8 @@ const signUp = () => {
 </script>
 
 <template>
-    <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <main>
+    <div class="signup-container d-flex justify-content-center align-items-center min-vh-100">
         <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%;">
           <div class="card-body text-center">
             <img src="" alt="프로필 이미지" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
@@ -68,6 +64,7 @@ const signUp = () => {
           </div>
         </div>
       </div>
+    </main>
 </template>
 
 <style scoped>

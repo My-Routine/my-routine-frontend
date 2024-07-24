@@ -9,7 +9,7 @@ const sideBarWidth = '200px'
 <template>
   <div class="d-flex">
     <Sidebar :style="{ 'width': sideBarWidth }" />
-    <div :style="{ 'width': `calc(100vw - ${ sideBarWidth })` }">
+    <div :style="{ 'width': `calc(100vw - ${ sideBarWidth })`}">
       <Navbar/>
       <RouterView/>
     </div>
@@ -17,5 +17,4 @@ const sideBarWidth = '200px'
 </template>
 
 <style scoped>
-
 </style>
