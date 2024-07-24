@@ -7,8 +7,8 @@ import Sidebar from '@/components/Sidebar.vue'
 
 <template>
   <div class="d-flex">
-    <Sidebar style="width: 200px;" />
-    <div style="width:calc(100vw - 200px);">
+    <Sidebar :style="{ 'width': sideBarWidth }" />
+    <div :style="{ 'width': `calc(100vw - ${ sideBarWidth })` }">
       <Navbar/>
       <RouterView/>
     </div>
@@ -16,5 +16,4 @@ import Sidebar from '@/components/Sidebar.vue'
 </template>
 
 <style scoped>
-
 </style>

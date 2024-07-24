@@ -38,6 +38,27 @@ const router = createRouter({
       name: 'myFavorite',
       component: () => import('@/views/ScheduleListView.vue')
     },
+    // Sidebar 메뉴
+    {
+      path: '/my/scedule',
+      name: 'mySchedules',
+      component: () => import('@/views/MySchedulesView.vue')
+    },
+    {
+      path: '/my/interests',
+      name: 'myInterests',
+      component: () => import('@/views/MyInterestsView.vue')
+    },
+    {
+      path: '/popular',
+      name: 'popularSchedules',
+      component: () => import('@/views/PopularView.vue')
+    },
+    {
+      path: '/my/dashboard',
+      name: 'myDashboard',
+      component: () => import('@/views/MyDashboardView.vue')
+    },
     
   ]
 })
