@@ -15,7 +15,7 @@
 
 <style scoped>
 .container {
-    height: 100px;
+    height: 10vh;
     width: calc(100vw - 200px);
 }
 
