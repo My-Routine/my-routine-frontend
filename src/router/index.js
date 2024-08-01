@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { isAuthenticated  } from '@/utils/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -6,7 +7,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/views/HomeView.vue')
+      component: () => import('@/views/HomeView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/login',
@@ -21,7 +23,8 @@ const router = createRouter({
     {
       path: '/schedule/register',
       name: 'makeSchedule',
-      component: () => import('@/views/ScheduleRegisterView.vue')
+      component: () => import('@/views/ScheduleRegisterView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/schedule/:scheduleId/update',
@@ -29,25 +32,29 @@ const router = createRouter({
       component: () => import('@/views/ScheduleRegisterView.vue')
     },
     {
-      path: '/schedule/detalls',
-      name: 'getAllSchedule',
-      component: () => import('@/views/ScheduleListView.vue')
+      path: '/schedule/registerform',
+      name: 'makeScheduleForm',
+      component: () => import('@/views/ScheduleRegisterFormView.vue'),
+      meta: { requiresAuth: true }
     },
     {
-      path: '/my/favorite',
-      name: 'myFavorite',
-      component: () => import('@/views/ScheduleListView.vue')
+      path: '/schedule/detalls',
+      name: 'getAllSchedule',
+      component: () => import('@/views/getAllScheduleView.vue'),
+      meta: { requiresAuth: true }
     },
     // Sidebar 메뉴
     {
       path: '/my/scedule',
       name: 'mySchedules',
-      component: () => import('@/views/MySchedulesView.vue')
+      component: () => import('@/views/MySchedulesView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/my/interests',
       name: 'myInterests',
-      component: () => import('@/views/MyInterestsView.vue')
+      component: () => import('@/views/MyInterestsView.vue'),
+      meta: { requiresAuth: true }
     },
     {
       path: '/popular',
@@ -57,10 +64,22 @@ const router = createRouter({
     {
       path: '/my/dashboard',
       name: 'myDashboard',
-      component: () => import('@/views/MyDashboardView.vue')
-    },
-    
+      component: () => import('@/views/MyDashboardView.vue'),
+      meta: { requiresAuth: true }
+    }, 
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if(to.matched.some(record => record.meta.requiresAuth)){
+    if(!isAuthenticated()) {
+      next({ name : 'login' });
+    }else {
+      next();
+    }
+  }else {
+    next();
+  }
+});
 
 export default router
