@@ -45,7 +45,7 @@ const router = createRouter({
     },
     // Sidebar 메뉴
     {
-      path: '/my/scedule',
+      path: '/my/schedule',
       name: 'mySchedules',
       component: () => import('@/views/MySchedulesView.vue'),
       meta: { requiresAuth: true }

@@ -51,9 +51,10 @@ const logout = async () => {
 a {
     color: black;
     text-decoration: none;
-}
-
-a:hover{
+  }
+  
+  a:hover {
     color: #2595cd;
-}
-</style>
+  }
+  </style>
+  
