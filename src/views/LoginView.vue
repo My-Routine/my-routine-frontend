@@ -1,10 +1,9 @@
 <script setup>
 import { ref } from 'vue';
-import axios  from 'axios'
+import axios  from '../api/axios'
 import { useRouter } from 'vue-router';
 import { updateAuthenticationStatus } from '@/utils/auth';
 
-const { VITE_REQUEST_URL } = import.meta.env;
 
 const loginForm = ref({
     email: "",
@@ -12,22 +11,21 @@ const loginForm = ref({
 })
 
 const router = useRouter();
-
 const login = async() => {
-    try {
-        const res = await axios.post(`${VITE_REQUEST_URL}/auth/login`,{
-            email: loginForm.value.email,
-            password: loginForm.value.password,
-        });
-        console.log("로그인 성공 : " , res.data)
+    axios.post('/auth/login', {
+        email: loginForm.value.email,
+        password: loginForm.value.password,
+    })
+    .then((res) => {
+        console.log("로그인 성공 : ", res.data);
         localStorage.setItem('token', res.data);
         updateAuthenticationStatus();
-        router.push({name : 'home'});
-
-    } catch (error) {
+        router.push({ name: 'home' });
+    })
+    .catch((error) => {
         alert("로그인 실패");
         console.error("로그인 실패 : ", error);
-    }
+    });
 }
 // onMounted(() => {
 //     document.getElementById("")

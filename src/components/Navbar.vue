@@ -2,16 +2,23 @@
 import { onMounted} from 'vue';
 import { useRouter } from 'vue-router';
 import { updateAuthenticationStatus, isAuthenticatedRef, nickname  } from '@/utils/auth';
+import axios from '../api/axios';
 
 const router = useRouter();
 
 onMounted(updateAuthenticationStatus);
 
 const logout = async () => {
+  await axios.post('/auth/logout')
+  .then(() => {
     localStorage.removeItem('token');
     updateAuthenticationStatus();
     router.push({ name: 'login'});
     alert("로그아웃 되었습니다.");
+  })
+  .catch(err => {
+    console.error("로그아웃 실패", err);
+  })
 };
 
 </script>

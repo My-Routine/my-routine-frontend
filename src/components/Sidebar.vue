@@ -48,9 +48,6 @@ import { RouterLink } from 'vue-router';
   background-color: #f1efe7; /* 세련된 회색 배경 */
   height: 100vh;
   width: 250px; /* 너비 설정 */
-  position: fixed; /* 고정 위치 설정 */
-  top: 0;
-  left: 0; /* 화면의 왼쪽에 위치 */
   display: flex;
   flex-direction: column;
   justify-content: start;

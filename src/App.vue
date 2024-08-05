@@ -14,7 +14,7 @@ const sideBarWidth = ref('250px');
     <Sidebar :style="{ 'width': sideBarWidth }" />
     <div :style="{ 'width': `calc(100vw - ${ sideBarWidth })` }">
       <Navbar/>
-      <RouterView :style="{'height': '89vh'}"/>
+      <RouterView :style="{'height': '100vh'}"/>
     </div>
   </div>
 </template>
