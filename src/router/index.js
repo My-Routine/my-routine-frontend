@@ -32,6 +32,12 @@ const router = createRouter({
       component: () => import('@/views/ScheduleRegisterView.vue')
     },
     {
+      path: '/my',
+      name: 'myPage',
+      component: () => import('@/views/MyPageView.vue'),
+      //meta: { requiresAuth: true }
+    },
+    {
       path: '/my/schedule',
       name: 'mySchedules',
       component: () => import('@/views/MySchedulesView.vue'),

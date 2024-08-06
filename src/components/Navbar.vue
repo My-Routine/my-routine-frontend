@@ -2,7 +2,7 @@
 import { onMounted} from 'vue';
 import { useRouter } from 'vue-router';
 import { updateAuthenticationStatus, isAuthenticatedRef, nickname  } from '@/utils/auth';
-import axios from '../api/axios';
+import axios from '@/api/axios';
 
 const router = useRouter();
 
@@ -32,7 +32,7 @@ const logout = async () => {
             <RouterLink :to="{ name: 'signup' }" class="text-decoration-none">회원가입</RouterLink>
           </div>
           <div v-if="isAuthenticatedRef" class="m-3">
-            <span>{{ nickname }}</span>
+            <RouterLink :to="{ name: 'myPage' }" class="text-decoration-none">{{nickname}}</RouterLink>
           </div>
           <div v-if="isAuthenticatedRef" class="m-3">
             <a href="#" @click.prevent="logout" class="text-decoration-none">로그아웃</a>

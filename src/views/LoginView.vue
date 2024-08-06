@@ -1,9 +1,8 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import axios  from '../api/axios'
 import { useRouter } from 'vue-router';
 import { updateAuthenticationStatus } from '@/utils/auth';
-
 
 const loginForm = ref({
     email: "",
