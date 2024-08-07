@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import axios  from '../api/axios'
+import axios  from '@/api/axios'
 import { useRouter } from 'vue-router';
 import { updateAuthenticationStatus } from '@/utils/auth';
 

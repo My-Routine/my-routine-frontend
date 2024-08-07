@@ -1,24 +1,21 @@
 <script setup>
-import { onMounted, ref } from 'vue';
-import { nickname, parseJwt } from '@/utils/auth';
-import axios from '@/api/axios';
-import router from '@/router';
+import { onMounted, ref } from "vue";
+import { nickname, parseJwt } from "@/utils/auth";
+import axios from "@/api/axios";
+import router from "@/router";
+import Swal from "sweetalert2";
 
 const myProfile = ref({
-    img: '',
-    nickname: '',
-    email: '',
-})
+  img: '',
+  nickname: '',
+  email: '',
+});
 
 const profileImgPreview = ref(null);
 const profileImg = ref(null);
 
-const currentPassword = ref('');
-const newPassword = ref('');
-const confirmPassword = ref('');
-
 onMounted(async () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   if (token != null) {
     const payload = parseJwt(token);
     try {
@@ -35,90 +32,189 @@ onMounted(async () => {
 
 /* 프로필 이미지 미리보기, 선택취소, 사진저장(수정) */
 const onPhotoChange = (e) => {
-    const file = e.target.files[0];
-    //파일 유효성 검사
-    if(file){
-        if(!file.type.startsWith('image/')){
-         alert('이미지 파일만 업로드해주세요.');
-          return;
-        }
-        if(file.size > 5 * 1024 * 1024){
-            alert('파일 크기는 5MB를 초과할 수 없습니다.')
-            return;
-        }
-        profileImg.value = file;
-        profileImgPreview.value = URL.createObjectURL(file);
-    }else {
-        profileImgPreview.value = null;
+  const file = e.target.files[0];
+  //파일 유효성 검사
+  if (file) {
+    if (!file.type.startsWith("image/")) {
+      alert("이미지 파일만 업로드해주세요.");
+      return;
     }
-}
-const removePhoto = () => {
-    profileImg.value = null;
+    if (file.size > 5 * 1024 * 1024) {
+      alert("파일 크기는 5MB를 초과할 수 없습니다.");
+      return;
+    }
+    profileImg.value = file;
+    profileImgPreview.value = URL.createObjectURL(file);
+  } else {
     profileImgPreview.value = null;
-}
-const savePhoto = async() => {
-  if(profileImg.value == null) return;
+  }
+};
+const removePhoto = () => {
+  profileImg.value = null;
+  profileImgPreview.value = null;
+};
+const savePhoto = async () => {
+  if (profileImg.value == null) return;
 
   const formData = new FormData();
-  formData.append('profileImg',profileImg.value);
-  axios.post('/users/modifyProfileImg', formData)
-  .then(res => {
-    alert("프로필 수정이 완료되었습니다.")
-    router.push({ name: 'myPage' })
-  })
-  .catch( err => {
+  formData.append("profileImg", profileImg.value);
+  axios
+    .post("/users/modifyProfileImg", formData)
+    .then((res) => {
+      Swal.fire({
+        title: '성공!',
+        text: '프로필 이미지 변경이 완료되었습니다.',
+        icon: 'success',
+        confirmButtonText: '확인'
+      });
+      router.push({ name: "myPage" });
+    })
+    .catch((err) => {
+      Swal.fire({
+        title: '오류',
+        text: '프로필 이미지 수정 중 오류가 발생했습니다.',
+        icon: 'error',
+        confirmButtonText: '확인'
+      });
       console.error(err);
-  })
-}
+    });
+};
 
+
+const passwordForm = ref({
+  currentPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+});
+const errors = ref({
+  currentPassword: null,
+  newPassword: null,
+  confirmPassword: null
+});
+
+/* 비밀번호 유효성 검사*/
+const validatePassword = () => {
+  let isValid = true;
+
+  // 현재 비밀번호 유효성 검사
+  if (!passwordForm.value.currentPassword) {
+    errors.value.currentPassword = '현재 비밀번호를 입력하세요.';
+    isValid = false;
+  } else {
+    errors.value.currentPassword = null;
+  }
+
+  // 새 비밀번호 유효성 검사
+  const specialCharRegex = /[!@#$%^&*(),.?":{}|<>]/;
+
+  if (!passwordForm.value.newPassword) {
+    errors.value.newPassword = '새 비밀번호를 입력하세요.';
+    isValid = false;
+  } else if (passwordForm.value.newPassword.length < 8) {
+    errors.value.newPassword = '새 비밀번호는 8자 이상이어야 합니다.';
+    isValid = false;
+  } else if (!specialCharRegex.test(passwordForm.value.newPassword)) {
+    errors.value.newPassword = '새 비밀번호에는 특수 문자가 포함되어야 합니다.';
+    isValid = false;
+  } else {
+    errors.value.newPassword = null;
+  }
+
+  // 새 비밀번호 확인 유효성 검사
+  if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
+    errors.value.confirmPassword = '비밀번호가 일치하지 않습니다.';
+    isValid = false;
+  } else {
+    errors.value.confirmPassword = null;
+  }
+
+  return isValid;
+};
 /* 비밀번호 수정 */
+const savePassword = () => {
+  if(!validatePassword()) return;
 
+  axios.post('/users/modifyPassword', {
+    currentPassword: passwordForm.value.currentPassword,
+    newPassword: passwordForm.value.newPassword
+  })
+  .then(resp => {
+    Swal.fire({
+      icon: 'success',
+      title: '성공!',
+      text: '비밀번호가 변경되었습니다.'
+    });
+    router.push( {name: 'myPage'});
+  })
+  .catch((error) => {
+    if(error.response && error.response.status === 401){
+      Swal.fire({
+        icon: 'error',
+        title: '비밀번호 불일치',
+        text: error.response.data
+      })
+    }else {
+      Swal.fire({
+        icon: 'error',
+        title: '서버 오류',
+        text: '서버 오류가 발생했습니다. 나중에 다시 시도해주세요.'
+      })
+    }
+  })
+};
 </script>
 <template>
-    <div class="container">
-      <h1>{{ nickname }}'s 페이지</h1>
-      <div class="content">
-        <div class="profile-section">
-          <div class="photo-section">
-            <img :src="profileImgPreview || myProfile.img || 'default-image-path.jpg'" alt="Profile Photo" class="profile-photo" />
-            <input type="file" @change="onPhotoChange" id="profileImg" class="file-input" name="profileImg"/>
-            <label class="btn btn-info input-file-btn" for="profileImg">사진 선택</label>
-            <div class="photo-buttons">
-              <button @click="removePhoto" class="btn btn-danger">사진 삭제</button>
-              <button @click="savePhoto" class="btn btn-primary">사진 저장</button>
-            </div>
-          </div>
-          <div class="account-section">
-            <label>닉네임</label>
-            <input v-model="myProfile.nickname" type="text" disabled class="form-control" />
-            <label>이메일</label>
-            <input v-model="myProfile.email" type="email" disabled class="form-control" />
+  <div class="container">
+    <h1 class="fw-bold">
+      <span class="text-primary">{{ nickname }}</span>'s 페이지
+    </h1>
+    <div class="content">
+      <div class="profile-section">
+        <div class="photo-section">
+          <img :src="profileImgPreview || myProfile.img || 'default-image-path.jpg'" alt="Profile Photo" class="profile-photo"/>
+          <input type="file" @change="onPhotoChange" id="profileImg" class="file-input" name="profileImg"/>
+          <label class="btn btn-info input-file-btn" for="profileImg">사진 선택</label>
+          <div class="photo-buttons">
+            <button @click="removePhoto" class="btn btn-danger">사진 삭제</button>
+            <button @click="savePhoto" class="btn btn-primary">사진 저장</button>
           </div>
         </div>
-        <div class="additional-sections">
-          <div class="password-section">
-            <label>현재 비밀번호</label>
-            <input v-model="currentPassword" type="password" class="form-control" />
-            <label>새 비밀번호</label>
-            <input v-model="newPassword" type="password" class="form-control" />
-            <label>새 비밀번호 확인</label>
-            <input v-model="confirmPassword" type="password" class="form-control" />
-            <button @click="savePassword" class="btn btn-success">비밀번호 저장</button>
-          </div>
-          <div class="inquiry-section">
-            <h2>문의 목록</h2>
-            <!-- 문의 목록 표시 -->
-            <ul>
-              <li v-for="inquiry in inquiries" :key="inquiry.id">{{ inquiry.title }}</li>
-            </ul>
-            <button @click="handleInquiry" class="btn btn-secondary">문의 하기</button>
-          </div>
+        <div class="account-section">
+          <label>닉네임</label>
+          <input v-model="myProfile.nickname" type="text" disabled class="form-control" />
+          <label>이메일</label>
+          <input v-model="myProfile.email" type="email" disabled class="form-control" />
+        </div>
+      </div>
+      <div class="additional-sections">
+        <div class="password-section">
+          <label>현재 비밀번호</label>
+          <input v-model="passwordForm.currentPassword" type="password" class="form-control" />
+          <p v-if="errors.currentPassword" class="text-danger">{{ errors.currentPassword }}</p>
+          <label>새 비밀번호</label>
+          <input v-model="passwordForm.newPassword" type="password" class="form-control" />
+          <p v-if="errors.newPassword" class="text-danger">{{ errors.newPassword }}</p>
+          
+          <label>새 비밀번호 확인</label>
+          <input v-model="passwordForm.confirmPassword" type="password" class="form-control" />
+          <p v-if="errors.confirmPassword" class="text-danger">{{ errors.confirmPassword }}</p>
+          
+          <button @click="savePassword" class="btn btn-success">비밀번호 저장</button>
+        </div>
+        <div class="inquiry-section">
+          <h3>문의 목록</h3>
+          <!-- 문의 목록 표시 -->
+          <ul>
+            <li v-for="inquiry in inquiries" :key="inquiry.id">{{ inquiry.title }}</li>
+          </ul>
+          <button @click="handleInquiry" class="btn btn-secondary">문의 하기</button>
         </div>
       </div>
     </div>
-  </template>
-  
-  <style scoped>
+  </div>
+</template>
+
+<style scoped>
 .container {
   max-width: 1200px;
   margin: 0 auto;
