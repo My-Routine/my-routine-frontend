@@ -27,15 +27,44 @@ const router = createRouter({
       // meta: { requiresAuth: true }
     },
     {
+      path: '/schedule',
+      name: 'scheduleList',
+      component: () => import('@/views/ScheduleListView.vue'),
+      // meta: { requiresAuth: true }
+    },
+    {
+      path: '/schedule/:scheduleId',
+      name: 'scheduleDetail',
+      component: () => import('@/views/ScheduleDetailView.vue'),
+      // meta: { requiresAuth: true }
+      props: true
+    },
+    {
+      path: '/day-schedule',
+      name: 'dayScheduleList',
+      component: () => import('@/components/day-schedule/DayScheduleList.vue')
+    },
+    {
+      path: '/register-work-time/:scheduleId/:startAt/:endAt/:workId/:largeCategoryId/:smallCategoryId/:dayScheduleId', 
+      name: 'WorkTimeRegisterView',
+      component: () => import('@/components/work-time/WorkTimeRegisterView.vue'),
+      props: true, 
+    },
+    
+    
+    
+
+
+
+
+
+
+
+
+    {
       path: '/schedule/:scheduleId/update',
       name: 'updateSchedule',
       component: () => import('@/views/ScheduleRegisterView.vue')
-    },
-    {
-      path: '/my/schedule',
-      name: 'mySchedules',
-      component: () => import('@/views/MySchedulesView.vue'),
-      // meta: { requiresAuth: true }
     },
     {
       path: '/my/interests',
@@ -53,7 +82,27 @@ const router = createRouter({
       name: 'myDashboard',
       component: () => import('@/views/MyDashboardView.vue'),
       // meta: { requiresAuth: true }
-    }, 
+    },
+    // {
+    //   path: '/getScheduleTest',
+    //   name: 'getScheduleTest',
+    //   component: () => import('@/views/test/getScheduleTest.vue'),
+    // }, 
+    // {
+    //   path: '/getScheduleTest2',
+    //   name: 'getScheduleTest2',
+    //   component: () => import('@/views/test/getScheduleTest2.vue'),
+    // }, 
+    // {
+    //   path: '/getScheduleTest3',
+    //   name: 'getScheduleTest3',
+    //   component: () => import('@/views/getScheduleTest3.vue'),
+    // }, 
+    // {
+    //   path: '/ScheduleRegisterTest',
+    //   name: 'ScheduleRegisterTest',
+    //   component: () => import('@/views/test/ScheduleRegisterTest.vue'),
+    // }, 
   ]
 });
 

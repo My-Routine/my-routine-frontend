@@ -3,8 +3,10 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Sidebar from '@/components/Sidebar.vue';
 import Navbar from '@/components/Navbar.vue';
+import { useRouter } from 'vue-router';
 
 const { VITE_REQUEST_URL } = import.meta.env;
+const router = useRouter();
 
 const schedules = ref([]);
 const totalPages = ref(0);
@@ -20,7 +22,6 @@ const fetchUserSchedules = async (page = 1) => {
 				size: size.value
 			}
 	}).then(({data}) => {
-		console.log(data)
 		schedules.value = data.content;
 		totalPages.value = data.page.totalPages;
 		currentPage.value = page;
@@ -64,6 +65,10 @@ const getPageNumbers = () => {
 
 	return pages;
 };
+
+const goToScheduleDetailPage = (scheduleId) => {
+	router.push({name: 'scheduleDetail', params: { scheduleId }})
+}
 </script>
 
 <template>
@@ -74,7 +79,7 @@ const getPageNumbers = () => {
 			</div>
 			<div class="content">
 				<div v-if="schedules" class="schedule-list">
-					<div class="schedule-item" v-for="schedule in schedules" :key="schedule.id">
+					<div class="schedule-item" v-for="schedule in schedules" :key="schedule.id" @click="goToScheduleDetailPage(schedule.id)">
 						<div>{{ schedule.title }}</div>
 						<div class="profile">
 							<div class="user-info">{{ schedule.user.nickname }}</div>

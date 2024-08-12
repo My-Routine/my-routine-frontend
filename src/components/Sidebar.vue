@@ -12,26 +12,31 @@
         <i class="fas fa-home"></i>
         <span>홈</span>
       </RouterLink>
-      <RouterLink :to="{ name: 'mySchedules' }" class="menu-link">
+      <RouterLink :to="{ name: 'scheduleList' }" class="menu-link">
         <i class="fas fa-calendar-alt"></i>
-        <span>내 스케줄 목록</span>
+        <span>스케줄</span>
       </RouterLink>
+
       <RouterLink :to="{ name: 'makeSchedule' }" class="menu-link">
         <i class="fas fa-plus-circle"></i>
         <span>스케줄 만들기</span>
       </RouterLink>
-      <RouterLink :to="{ name: 'myInterests' }" class="menu-link">
+
+      <!-- <RouterLink :to="{ name: 'myInterests' }" class="menu-link">
         <i class="fas fa-heart"></i>
         <span>내 관심</span>
-      </RouterLink>
-      <RouterLink :to="{ name: 'popularSchedules' }" class="menu-link">
+      </RouterLink> -->
+
+      <!-- <RouterLink :to="{ name: 'popularSchedules' }" class="menu-link">
         <i class="fas fa-star"></i>
         <span>인기 스케줄</span>
-      </RouterLink>
-      <RouterLink :to="{ name: 'myDashboard' }" class="menu-link">
+      </RouterLink> -->
+
+      <!-- <RouterLink :to="{ name: 'myDashboard' }" class="menu-link">
         <i class="fas fa-chart-line"></i>
         <span>내 통계</span>
-      </RouterLink>
+      </RouterLink> -->
+
     </div>
   </div>
 </template>
@@ -48,9 +53,6 @@ import { RouterLink } from 'vue-router';
   background-color: #f1efe7; /* 세련된 회색 배경 */
   height: 100vh;
   width: 250px; /* 너비 설정 */
-  position: fixed; /* 고정 위치 설정 */
-  top: 0;
-  left: 0; /* 화면의 왼쪽에 위치 */
   display: flex;
   flex-direction: column;
   justify-content: start;
