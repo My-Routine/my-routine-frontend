@@ -3,6 +3,7 @@
 import { onMounted, ref } from 'vue';
 import ScheduleTable from '@/components/ScheduleTable.vue'
 import axios from 'axios';
+import CircleSchedule from '@/CircleSchedule.vue';
 
 const dayOfWeeks = ref([
     { kor: '월', num: 1},
@@ -15,13 +16,13 @@ const dayOfWeeks = ref([
 ])
 
 const getDayScheduleInfoById = async(scheduleId) => {
-    await axios.get("http://localhost:8080/schedules/" + scheduleId)
-        .then(({data}) => {
-            dayScheduleInfo.value = data;
-            console.log(dayScheduleInfo.value);
-        }).catch((err) => {
-            alert(err);
-        })
+    // await axios.get("http://localhost:8080/schedules/" + scheduleId)
+    //     .then(({data}) => {
+    //         dayScheduleInfo.value = data;
+    //         console.log(dayScheduleInfo.value);
+    //     }).catch((err) => {
+    //         alert(err);
+    //     })
 }
 
 const dayScheduleInfo = ref({
@@ -87,7 +88,7 @@ getDayScheduleInfoById(1);
         <div style="height: 40px;" class="d-flex justify-content-center align-items-center">
             <button class="btn btn-primary">저장하기</button>
         </div>
-
+        <CircleSchedule/>
     </div>
 </template>
 
