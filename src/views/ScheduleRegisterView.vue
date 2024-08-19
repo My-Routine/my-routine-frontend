@@ -1,6 +1,5 @@
 <template>
     <div id="app">
-      <Sidebar /> <!-- 사이드바 컴포넌트 -->
       <div class="main-content">
         <CircularSchedule />
         <ScheduleRegisterTest />

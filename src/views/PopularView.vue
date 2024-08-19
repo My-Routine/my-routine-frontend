@@ -11,29 +11,30 @@ const totalPages = ref(0);
 const currentPage = ref(1);
 const size = ref(10);
 
-const fetchSchedules = async (page = 1) => {
-  try {
-    const response = await axios.get(`${VITE_REQUEST_URL}/likes/schedules/most-liked`, {
+const fetchSchedules = (page = 1) => {
+  axios
+    .get(`${VITE_REQUEST_URL}/likes/schedules/most-liked`, {
       params: {
         page: page - 1,
         size: size.value
       }
+    })
+    .then(response => {
+      if (response.headers['content-type'] && response.headers['content-type'].includes('application/json')) {
+        schedules.value = response.data.content;
+        totalPages.value = response.data.page.totalPages;
+        currentPage.value = page;
+
+        console.log('Schedules:', schedules.value);
+        console.log('Total Pages:', totalPages.value);
+        console.log('Current Page:', currentPage.value);
+      } else {
+        console.error('Unexpected response type:', response.headers['content-type']);
+      }
+    })
+    .catch(err => {
+      console.error('Error fetching schedules:', err);
     });
-
-    if (response.headers['content-type'] && response.headers['content-type'].includes('application/json')) {
-      schedules.value = response.data.content;
-      totalPages.value = response.data.page.totalPages;
-      currentPage.value = page;
-
-      console.log('Schedules:', schedules.value);
-      console.log('Total Pages:', totalPages.value);
-      console.log('Current Page:', currentPage.value);
-    } else {
-      console.error('Unexpected response type:', response.headers['content-type']);
-    }
-  } catch (err) {
-    console.error('Error fetching schedules:', err);
-  }
 };
 
 onMounted(() => {
@@ -77,8 +78,6 @@ const getPageNumbers = () => {
 
 <template>
   <div id="app">
-    <Sidebar />
-    <Navbar />
     <div class="main-content">
       <div class="header">
         <span>인기 스케줄</span>

@@ -45,11 +45,15 @@ const router = createRouter({
       component: () => import('@/components/day-schedule/DayScheduleList.vue')
     },
     {
-      path: '/register-work-time/:scheduleId/:startAt/:endAt/:workId/:largeCategoryId/:smallCategoryId/:dayScheduleId', 
+      path: '/register-work-time/:scheduleId/:dayScheduleId/:startAt/:endAt/:workId?/:largeCategoryId?/:smallCategoryId?/:workTimeId?', 
       name: 'WorkTimeRegisterView',
       component: () => import('@/components/work-time/WorkTimeRegisterView.vue'),
-      props: true, 
+      props: true,
     },
+    
+    
+    
+    
     
     
     

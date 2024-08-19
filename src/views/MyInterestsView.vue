@@ -11,33 +11,34 @@ const totalPages = ref(0);
 const currentPage = ref(1);
 const size = ref(10);
 
-const fetchUserLikedSchedules = async (page = 1) => {
-  try {
-    const response = await axios.get(`${VITE_REQUEST_URL}/likes/schedules/list`, {
+const fetchUserLikedSchedules = (page = 1) => {
+  axios
+    .get(`${VITE_REQUEST_URL}/likes/schedules/list`, {
       params: {
         page: page - 1,
         size: size.value
       }
-    });
+    })
+    .then((response) => {
+      if (response.headers['content-type'] && response.headers['content-type'].includes('application/json')) {
+        schedules.value = response.data.content;
+        totalPages.value = response.data.page.totalPages;
+        currentPage.value = page;
 
-    if (response.headers['content-type'] && response.headers['content-type'].includes('application/json')) {
-      schedules.value = response.data.content;
-      totalPages.value = response.data.page.totalPages;
-      currentPage.value = page;
+        if (schedules.value.length === 0) {
+          alert('좋아하는 스케줄이 없습니다.');
+        }
 
-      if (schedules.value.length === 0) {
-        alert('좋아하는 스케줄이 없습니다.');
+        console.log('Schedules:', schedules.value);
+        console.log('Total Pages:', totalPages.value);
+        console.log('Current Page:', currentPage.value);
+      } else {
+        console.error('Unexpected response type:', response.headers['content-type']);
       }
-
-      console.log('Schedules:', schedules.value);
-      console.log('Total Pages:', totalPages.value);
-      console.log('Current Page:', currentPage.value);
-    } else {
-      console.error('Unexpected response type:', response.headers['content-type']);
-    }
-  } catch (err) {
-    console.error('Error fetching schedules:', err);
-  }
+    })
+    .catch((err) => {
+      console.error('Error fetching schedules:', err);
+    });
 };
 
 onMounted(() => {
@@ -81,8 +82,6 @@ const getPageNumbers = () => {
 
 <template>
   <div id="app">
-    <Sidebar />
-    <Navbar />
     <div class="main-content">
       <div class="header">
         <span>유저가 좋아하는 스케줄 목록</span>

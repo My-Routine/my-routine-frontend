@@ -22,15 +22,15 @@
         <span>스케줄 만들기</span>
       </RouterLink>
 
-      <!-- <RouterLink :to="{ name: 'myInterests' }" class="menu-link">
+      <RouterLink :to="{ name: 'myInterests' }" class="menu-link">
         <i class="fas fa-heart"></i>
-        <span>내 관심</span>
-      </RouterLink> -->
+        <span>내 관심 스케줄</span>
+      </RouterLink>
 
-      <!-- <RouterLink :to="{ name: 'popularSchedules' }" class="menu-link">
+      <RouterLink :to="{ name: 'popularSchedules' }" class="menu-link">
         <i class="fas fa-star"></i>
         <span>인기 스케줄</span>
-      </RouterLink> -->
+      </RouterLink>
 
       <!-- <RouterLink :to="{ name: 'myDashboard' }" class="menu-link">
         <i class="fas fa-chart-line"></i>
