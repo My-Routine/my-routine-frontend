@@ -42,12 +42,12 @@ const router = createRouter({
     {
       path: '/day-schedule',
       name: 'dayScheduleList',
-      component: () => import('@/components/day-schedule/DayScheduleList.vue')
+      component: () => import('@/components/day-schedule/DayScheduleWithCircle.vue')
     },
     {
       path: '/register-work-time/:scheduleId/:dayScheduleId/:startAt/:endAt/:workId?/:largeCategoryId?/:smallCategoryId?/:workTimeId?', 
       name: 'WorkTimeRegisterView',
-      component: () => import('@/components/work-time/WorkTimeRegisterView.vue'),
+      component: () => import('@/components/work-time/WorkTimeRegisterForm.vue'),
       props: true,
     },
     
