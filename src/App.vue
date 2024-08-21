@@ -9,7 +9,7 @@ import Sidebar from '@/components/Sidebar.vue'
 
     <div style="width:100%; margin-right:3%;">
       <Navbar class="w-100"/>
-      <RouterView class="w-100" style="height:89vh;"/>
+      <RouterView class="w-100" style="height:89vh;" :key="$route.fullPath"/>
     </div>
   </div>
 </template>

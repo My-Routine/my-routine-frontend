@@ -1,17 +1,32 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import DayScheduleWithCircle from '@/components/day-schedule/DayScheduleWithCircle.vue';
 import WorkTimeRegisterForm from '@/components/work-time/WorkTimeRegisterForm.vue';
 import WorkTimeUpdateForm from '@/components/work-time/WorkTimeUpdateForm.vue';
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const { VITE_REQUEST_URL } = import.meta.env;
 const route = useRoute();
+const router = useRouter();
 const modalStatus = ref("UPDATE"); // REGISTER, UPDATE
 const selectedWorkTime = ref();
 const inputTitle = ref("");
+
 const selectedDay = ref(1);
+
+onMounted(() => {
+    if (route.query.day) {
+        selectedDay.value = route.query.day;
+    } else {
+        selectedDay.value = 1;
+    }
+})
+
+watch(selectedDay, () => {
+    router.push({ name: 'scheduleDetail', query: { day: selectedDay.value } });
+},{immediate: true})
+
 const schedule = ref({
     id: Number,
     title: String,
@@ -74,7 +89,7 @@ getSchedule();
         </div>
 
         <div class="w-100 d-flex justify-content-between">
-            <DayScheduleWithCircle style="width: 50%;" :schedule="schedule" :day="selectedDay" @click-work-time="setWorkTime" @click-empty-work-time="setEmptyTime"/>
+            <DayScheduleWithCircle style="width: 60%;" :schedule="schedule" :day="selectedDay" @click-work-time="setWorkTime" @click-empty-work-time="setEmptyTime"/>
 
             <template v-if="modalStatus == 'UPDATE'">
                 <WorkTimeUpdateForm style="width: 40%;" :selectedWorkTime="selectedWorkTime"/>

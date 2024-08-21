@@ -7,19 +7,21 @@ import axios from 'axios';
 
 Chart.register(...registerables); // Pie Chart를 사용할 수 있도록 Chart.js에 컨트롤러 등록
 const emit = defineEmits(['clickWorkTime', 'clickEmptyWorkTime'])
-const startOfDay = "00:00:00";
-const endOfDay = "24:00:00"; 
 const palette = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FFCD56', '#36A2EB', '#4BC0C0', '#FF6384'];
+const route = useRoute();
 const props = defineProps({
   schedule: Object,
-  day: Number,
 })
+
+watch(() => route.query.day, () => {
+  getWorkTimes();
+})
+
 
 const emptyWorkTitle = "클릭 시 추가";
 
 const workTimes = ref();
 const workTimesIncludeEmpty = ref();
-const route = useRoute();
 
 const selectedWorkTime = ref({
   workTimeId: Number,
@@ -36,7 +38,7 @@ const selectedWorkTime = ref({
 let chartInstance = null;
 
 const getWorkTimes = () => {
-  axios.get(`${VITE_REQUEST_URL}/schedules/${route.params.scheduleId}/day/${props.day}/work-times`)
+  axios.get(`${VITE_REQUEST_URL}/schedules/${route.params.scheduleId}/day/${route.query.day}/work-times`)
     .then(({ data }) => {
       workTimes.value = data;
     }).catch((error) => {
@@ -59,8 +61,8 @@ const minutesToTime = (minutes) => {
 
 watch(workTimes, () => {
   workTimesIncludeEmpty.value = [];
-  let currentEndMinutes = timeToMinutes(startOfDay);
-  const endOfDayMinutes = timeToMinutes(endOfDay);
+  let currentEndMinutes = timeToMinutes("00:00:00");
+  const endOfDayMinutes = timeToMinutes("24:00:00");
 
   // 
   workTimes.value.forEach((workTime) => {
@@ -77,10 +79,11 @@ watch(workTimes, () => {
         duration: workStartMinutes - currentEndMinutes,
       });
     }
+
     // 현재 작업 추가
     workTimesIncludeEmpty.value.push({
       ...workTime,
-      duration: workEndMinutes - workStartMinutes,
+      duration: workEndMinutes - workStartMinutes > 0 ? workEndMinutes - workStartMinutes: 24 * 60 - workStartMinutes + workEndMinutes,
     });
 
     // 최근 끝난 시간 업데이트
@@ -88,7 +91,7 @@ watch(workTimes, () => {
   });
 
   // 모든 작업이 끝났을 때, 24시보다 적으면 채워주기
-  if (currentEndMinutes < endOfDayMinutes) {
+  if (currentEndMinutes != timeToMinutes("00:00:00") && currentEndMinutes < endOfDayMinutes) {
     workTimesIncludeEmpty.value.push({
       workTitle: emptyWorkTitle,
       startAt: minutesToTime(currentEndMinutes),
@@ -168,20 +171,41 @@ const renderChart = (data) => {
 };
 
 getWorkTimes();
-
-watch(() => props.day, () => {
-  getWorkTimes();
-})
 </script>
 
 <template>
-  <div class="d-flex flex-column" style="width:100%; margin: 0 auto;">
-    <canvas class="w-100" id="timeChart" style="width: 90%;height: 90%;"></canvas>
-    <!-- <template v-if="workTimes">
-    </template>
-    <template v-else>
-      <p>선택한 요일에 작업이 없습니다.</p>
-    </template> -->
+  <div class="d-flex justify-content-center align-items-center text-center" style="width:100%;">
+    <div style="width:80%; position: relative;">
+      <canvas id="timeChart" style="width: 100%; aspect-ratio: 1 / 1;"></canvas>
+      <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+        <div style="position: absolute; top: 1%; left: 50%; transform: translate(-50%, -50%);">0</div>
+        <div style="position: absolute; top: 3%; left: 64%; transform: translate(-50%, -50%);">1</div>
+        <div style="position: absolute; top: 8%; left: 76%; transform: translate(-50%, -50%);">2</div>
+        <div style="position: absolute; top: 16%; left: 87%; transform: translate(-50%, -50%);">3</div>
+        <div style="position: absolute; top: 26%; left: 95%; transform: translate(-50%, -50%);">4</div>
+        <div style="position: absolute; top: 37%; left: 100%; transform: translate(-50%, -50%);">5</div>
+        <div style="position: absolute; top: 50%; left: 102%; transform: translate(-50%, -50%);">6</div>
+        <div style="position: absolute; top: 63%; left: 100%; transform: translate(-50%, -50%);">7</div>
+        <div style="position: absolute; top: 74%; left: 95%; transform: translate(-50%, -50%);">8</div>
+        <div style="position: absolute; top: 84%; left: 87%; transform: translate(-50%, -50%);">9</div>
+        <div style="position: absolute; top: 92%; left: 76%; transform: translate(-50%, -50%);">10</div>
+        <div style="position: absolute; top: 97%; left: 64%; transform: translate(-50%, -50%);">11</div>
+        <div style="position: absolute; top: 99%; left: 50%; transform: translate(-50%, -50%);">12</div>
+
+        <div style="position: absolute; top: 97%; left: 36%; transform: translate(-50%, -50%);">13</div>
+        <div style="position: absolute; top: 92%; left: 24%; transform: translate(-50%, -50%);">14</div>
+        <div style="position: absolute; top: 84%; left: 13%; transform: translate(-50%, -50%);">15</div>
+        <div style="position: absolute; top: 74%; left: 5%; transform: translate(-50%, -50%);">16</div>
+        <div style="position: absolute; top: 63%; left: 0%; transform: translate(-50%, -50%);">17</div>
+        <div style="position: absolute; top: 50%; left: -2%; transform: translate(-50%, -50%);">18</div>
+        <div style="position: absolute; top: 37%; left: 0%; transform: translate(-50%, -50%);">19</div>
+        <div style="position: absolute; top: 26%; left: 5%; transform: translate(-50%, -50%);">20</div>
+        <div style="position: absolute; top: 16%; left: 13%; transform: translate(-50%, -50%);">21</div>
+        <div style="position: absolute; top: 8%; left: 24%; transform: translate(-50%, -50%);">22</div>
+        <div style="position: absolute; top: 3%; left: 36%; transform: translate(-50%, -50%);">23</div>
+      </div>
+
+    </div>
   </div>
 </template>
 
