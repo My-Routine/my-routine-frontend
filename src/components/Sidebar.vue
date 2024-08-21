@@ -12,9 +12,19 @@
         <i class="fas fa-home"></i>
         <span>홈</span>
       </RouterLink>
-      <RouterLink :to="{ name: 'scheduleList' }" class="menu-link">
+
+      <!-- 스케줄 링크 -->
+      <RouterLink 
+        :to="{ name: 'scheduleList' }" 
+        class="menu-link" 
+        @mouseover="showPlus = true" 
+        @mouseleave="showPlus = false"
+      >
         <i class="fas fa-calendar-alt"></i>
-        <span>스케줄</span>
+        <span class="menu-text">
+          스케줄
+          <span v-if="showPlus" class="plus-icon" @click="openModal">+</span>
+        </span>
       </RouterLink>
 
       <RouterLink :to="{ name: 'makeSchedule' }" class="menu-link">
@@ -31,18 +41,39 @@
         <i class="fas fa-star"></i>
         <span>인기 스케줄</span>
       </RouterLink>
-
-      <!-- <RouterLink :to="{ name: 'myDashboard' }" class="menu-link">
-        <i class="fas fa-chart-line"></i>
-        <span>내 통계</span>
-      </RouterLink> -->
-
     </div>
+
+    <!-- 모달 컴포넌트 사용 -->
+    <ModalComponent 
+      v-if="showModal" 
+      title="새 스케줄 추가" 
+      @close="closeModal" 
+      @submit="submitSchedule"
+    />
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import ModalComponent from '@/components/modal/ScheduleRegisterModal.vue';
+
+const showPlus = ref(false);
+const showModal = ref(false);
+
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
+
+const submitSchedule = (scheduleTitle) => {
+  console.log('새 스케줄 제목:', scheduleTitle);
+  // 여기에서 스케줄 등록 로직을 처리할 수 있습니다.
+  closeModal(); // 등록 후 모달 닫기
+};
 </script>
 
 <style scoped>
@@ -106,6 +137,19 @@ import { RouterLink } from 'vue-router';
 
 .menu-link span {
   margin-left: 10px;
+}
+
+.menu-text {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.plus-icon {
+  margin-left: auto; /* 텍스트와 간격을 넓히기 위해 자동 마진 적용 */
+  padding-right: 10px; /* 오른쪽 끝으로 이동 */
+  font-size: 20px;
 }
 
 a {
