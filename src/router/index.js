@@ -21,12 +21,6 @@ const router = createRouter({
       component: () => import('@/views/SignupView.vue')
     },
     {
-      path: '/schedule/register',
-      name: 'makeSchedule',
-      component: () => import('@/views/ScheduleRegisterView.vue'),
-      // meta: { requiresAuth: true }
-    },
-    {
       path: '/schedule',
       name: 'scheduleList',
       component: () => import('@/views/ScheduleListView.vue'),
@@ -45,32 +39,6 @@ const router = createRouter({
       component: () => import('@/components/day-schedule/DayScheduleWithCircle.vue')
     },
     {
-      path: '/register-work-time/:scheduleId/:dayScheduleId/:startAt/:endAt/:workId?/:largeCategoryId?/:smallCategoryId?/:workTimeId?', 
-      name: 'WorkTimeRegisterView',
-      component: () => import('@/components/work-time/WorkTimeRegisterForm.vue'),
-      props: true,
-    },
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-
-
-
-    {
-      path: '/schedule/:scheduleId/update',
-      name: 'updateSchedule',
-      component: () => import('@/views/ScheduleRegisterView.vue')
-    },
-    {
       path: '/my/interests',
       name: 'myInterests',
       component: () => import('@/views/MyInterestsView.vue'),
@@ -87,26 +55,6 @@ const router = createRouter({
       component: () => import('@/views/MyDashboardView.vue'),
       // meta: { requiresAuth: true }
     },
-    // {
-    //   path: '/getScheduleTest',
-    //   name: 'getScheduleTest',
-    //   component: () => import('@/views/test/getScheduleTest.vue'),
-    // }, 
-    // {
-    //   path: '/getScheduleTest2',
-    //   name: 'getScheduleTest2',
-    //   component: () => import('@/views/test/getScheduleTest2.vue'),
-    // }, 
-    // {
-    //   path: '/getScheduleTest3',
-    //   name: 'getScheduleTest3',
-    //   component: () => import('@/views/getScheduleTest3.vue'),
-    // }, 
-    // {
-    //   path: '/ScheduleRegisterTest',
-    //   name: 'ScheduleRegisterTest',
-    //   component: () => import('@/views/test/ScheduleRegisterTest.vue'),
-    // }, 
   ]
 });
 
