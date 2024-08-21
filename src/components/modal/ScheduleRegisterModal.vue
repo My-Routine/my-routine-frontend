@@ -16,18 +16,11 @@ const inputValue = ref('');
 
 const VITE_REQUEST_URL = import.meta.env.VITE_REQUEST_URL;
 
-const closeModal = () => {
-  emits('close');
-};
-
 const submit = () => {
   axios.post(`${VITE_REQUEST_URL}/schedules`, {
     title: inputValue.value
   })
-  .then(response => {
-    console.log('Response:', response.data);
-    emits('submit', response.data); // 서버 응답 데이터를 부모 컴포넌트로 전달
-
+  .then(({data}) => {
     // Swal로 성공 메시지 표시
     Swal.fire({
       title: '성공!',
@@ -36,8 +29,8 @@ const submit = () => {
       confirmButtonText: '확인'
     }).then(() => {
       // 스케줄 리스트 갱신
-      fetchUserSchedules(); 
-      closeModal(); // 등록 후 모달 닫기
+      emits('close'); // 등록 후 모달 닫기
+      emits('submit', data); // 서버 응답 데이터를 부모 컴포넌트로 전달
     });
   })
   .catch(error => {
@@ -51,6 +44,10 @@ const submit = () => {
       confirmButtonText: '확인'
     });
   });
+};
+
+const closeModal = () => {
+  emits('close');
 };
 </script>
 
