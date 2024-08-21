@@ -71,7 +71,11 @@ const updateWorkTime = () => {
 
   axios.put(`${VITE_REQUEST_URL}/schedules/work-times/${props.selectedWorkTime.workTimeId}`, updateForm.value)
     .then(() => {
-      showSuccessAlert('작업이 성공적으로 수정되었습니다.');
+      showSuccessAlert('작업이 성공적으로 수정되었습니다.',
+        () => {
+          router.go(0); // 새로고침
+        }
+      );
     }).catch((err) => {
       console.error(err);
     });
@@ -80,8 +84,11 @@ const updateWorkTime = () => {
 const deleteWorkTime = () => {
   axios.delete(`${VITE_REQUEST_URL}/schedules/work-times/${props.selectedWorkTime.workTimeId}`)
     .then(() => {
-      showSuccessAlert('작업이 삭제되었습니다.');
-      router.go(0); // 새로고침
+      showSuccessAlert('작업이 삭제되었습니다.',
+        () => {
+          router.go(0); // 새로고침
+        }
+      );
     }).catch((err) => {
       console.error(err);
     });

@@ -15,12 +15,12 @@ const selectedWorkTime = ref();
 const inputTitle = ref("");
 const selectedDay = ref(1);
 
+if (route.query.day) {
+    selectedDay.value = route.query.day;
+} else {
+    selectedDay.value = 1;
+}
 onMounted(() => {
-    if (route.query.day) {
-        selectedDay.value = route.query.day;
-    } else {
-        selectedDay.value = 1;
-    }
 })
 
 watch(selectedDay, () => {
@@ -111,18 +111,26 @@ const changeTitle = () => {
             <!-- 요일 고르기 끝 -->
         </div>
 
-        <div class="w-100 d-flex justify-content-between">
+        <div class="w-100 d-flex justify-content-center">
             <DayScheduleWithCircle style="width: 60%;" :schedule="schedule" :day="selectedDay" @click-work-time="setWorkTime" @click-empty-work-time="setEmptyTime"/>
 
-            <template v-if="modalStatus == 'UPDATE'">
+            <transition v-if="modalStatus == 'UPDATE'" name="fade" >
                 <WorkTimeUpdateForm style="width: 40%;" :selectedWorkTime="selectedWorkTime"/>
-            </template>
-            <template v-if="modalStatus == 'REGISTER'">
-                <WorkTimeRegisterForm style="width: 40%;" :selectedWorkTime="selectedWorkTime" :scheduleId="schedule.id" :day="selectedDay"/>
-            </template>
+            </transition>
+            <transition v-if="modalStatus == 'REGISTER'" name="fade" >
+                <WorkTimeRegisterForm style="width: 40%;" :selectedWorkTime="selectedWorkTime" :scheduleId="schedule.id" :day="selectedDay" />
+            </transition>
         </div>
     </div>
 </template>
-<style scoped>
 
+<style scoped>
+/* Fade 애니메이션 정의 */
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s ease;
+  }
+  
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0;
+  }
 </style>

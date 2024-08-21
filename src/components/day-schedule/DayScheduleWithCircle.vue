@@ -13,11 +13,6 @@ const props = defineProps({
   schedule: Object,
 })
 
-watch(() => route.query.day, () => {
-  getWorkTimes();
-})
-
-
 const emptyWorkTitle = "클릭 시 추가";
 
 const workTimes = ref();
@@ -38,7 +33,7 @@ const selectedWorkTime = ref({
 let chartInstance = null;
 
 const getWorkTimes = () => {
-  axios.get(`${VITE_REQUEST_URL}/schedules/${route.params.scheduleId}/day/${route.query.day}/work-times`)
+  axios.get(`${VITE_REQUEST_URL}/schedules/${route.params.scheduleId}/day/${(route.query.day != null && route.query.day != undefined) ? route.query.day : 1}/work-times`)
     .then(({ data }) => {
       workTimes.value = data;
     }).catch((error) => {
@@ -170,7 +165,9 @@ const renderChart = (data) => {
   });
 };
 
-getWorkTimes();
+watch(() => route.query.day, () => {
+  getWorkTimes();
+}, {immediate:true})
 </script>
 
 <template>

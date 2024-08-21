@@ -63,8 +63,11 @@ const registerWorkTime = () => {
 
   axios.post(`${VITE_REQUEST_URL}/schedules/${props.scheduleId}/day-schedules/day/${props.day}/work-times`, registerForm.value)
     .then(() => {
-      showSuccessAlert('작업이 성공적으로 등록되었습니다');
-      router.go(0);
+      showSuccessAlert('작업이 성공적으로 등록되었습니다',
+        () => {
+          router.go(0);
+        }
+      );
     }).catch((err) => {
       console.error(err);
     });
