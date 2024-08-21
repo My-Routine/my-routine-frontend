@@ -140,7 +140,7 @@ const deleteSchedule = () => {
         schedules.value = schedules.value.filter(schedule => schedule.id !== selectedSchedule.value.id);
         closeModal();
 
-        // Swal로 성공 메시지 표시
+        // 성공 메시지 표시
         Swal.fire({
           title: '성공!',
           text: '정상적으로 삭제되었습니다.',
@@ -149,16 +149,18 @@ const deleteSchedule = () => {
         });
       })
       .catch((err) => {
-        console.error(err);
-
-        // Swal로 에러 메시지 표시
-        Swal.fire({
-          title: '에러!',
-          text: '삭제 중 문제가 발생했습니다. 다시 시도해 주세요.',
-          icon: 'error',
-          confirmButtonText: '확인'
-        });
-      });
+  console.error('Error during delete:', err);  
+  console.error('Response data:', err.response?.data); // 응답 데이터를 추가로 출력
+  console.error('Response status:', err.response?.status); // 상태 코드를 출력
+  console.error('Response headers:', err.response?.headers); // 헤더를 출력
+  
+  Swal.fire({
+    title: '에러!',
+    text: '삭제 중 문제가 발생했습니다. 다시 시도해 주세요.',
+    icon: 'error',
+    confirmButtonText: '확인'
+  });
+});
   }
 };
 </script>

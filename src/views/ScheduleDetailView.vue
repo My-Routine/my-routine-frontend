@@ -5,10 +5,11 @@ import WorkTimeRegisterForm from '@/components/work-time/WorkTimeRegisterForm.vu
 import WorkTimeUpdateForm from '@/components/work-time/WorkTimeUpdateForm.vue';
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import Swal from 'sweetalert2';
 
 const { VITE_REQUEST_URL } = import.meta.env;
 const route = useRoute();
-const modalStatus = ref("UPDATE"); // REGISTER, UPDATE
+const modalStatus = ref(""); // REGISTER, UPDATE
 const selectedWorkTime = ref();
 const inputTitle = ref("");
 const selectedDay = ref(1);
@@ -52,6 +53,29 @@ const getSchedule = () => {
 
 getSchedule();
 
+const changeTitle = () => {
+    axios.put(`${VITE_REQUEST_URL}/schedules/${route.params.scheduleId}`, {
+        title: inputTitle.value // 서버로 보낼 새 제목
+    })
+    .then(() => {
+        Swal.fire({
+            title: '성공!',
+            text: '스케줄 제목이 정상적으로 수정되었습니다.',
+            icon: 'success',
+            confirmButtonText: '확인'
+        });
+    })
+    .catch((err) => {
+        console.error(err);
+        Swal.fire({
+            title: '에러!',
+            text: '스케줄 제목 수정 중 오류가 발생했습니다.',
+            icon: 'error',
+            confirmButtonText: '확인'
+        });
+    });
+};
+
 </script>
 <template>
     <div class="w-100 d-flex flex-column gap-3">
@@ -60,7 +84,7 @@ getSchedule();
             <div class="input-group input-group-lg"> 
                 <span class="input-group-text">제목</span>
                 <input type="text" class="form-control" v-model="inputTitle">
-                <button class="btn btn-secondary" type="button" id="button-addon2">수정</button>
+                <button class="btn btn-secondary" type="button" id="button-addon2" @click="changeTitle">수정</button>
             </div>
             <!-- 스케쥴 제목 끝 -->
 
@@ -79,7 +103,7 @@ getSchedule();
             <template v-if="modalStatus == 'UPDATE'">
                 <WorkTimeUpdateForm style="width: 40%;" :selectedWorkTime="selectedWorkTime"/>
             </template>
-            <template v-else>
+            <template v-if="modalStatus == 'REGISTER'">
                 <WorkTimeRegisterForm style="width: 40%;" :selectedWorkTime="selectedWorkTime" :scheduleId="schedule.id" :day="selectedDay"/>
             </template>
         </div>

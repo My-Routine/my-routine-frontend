@@ -1,3 +1,30 @@
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import ModalComponent from '@/components/modal/ScheduleRegisterModal.vue';
+
+const showPlus = ref(false);
+const showModal = ref(false);
+
+const router = useRouter() 
+
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
+
+const submitSchedule = (scheduleId) => {
+  // 여기에서 스케줄 등록 로직을 처리할 수 있습니다.
+  closeModal(); // 등록 후 모달 닫기
+  router.push({name:"scheduleDetail", params:{scheduleId}})
+  // console.log("스케줄 타이틀 : ", scheduleId);
+
+};
+</script>
+
 <template>
   <div class="sidebar-container">
     <!-- logo -->
@@ -27,11 +54,6 @@
         </span>
       </RouterLink>
 
-      <RouterLink :to="{ name: 'makeSchedule' }" class="menu-link">
-        <i class="fas fa-plus-circle"></i>
-        <span>스케줄 만들기</span>
-      </RouterLink>
-
       <RouterLink :to="{ name: 'myInterests' }" class="menu-link">
         <i class="fas fa-heart"></i>
         <span>내 관심 스케줄</span>
@@ -52,29 +74,6 @@
     />
   </div>
 </template>
-
-<script setup>
-import { ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import ModalComponent from '@/components/modal/ScheduleRegisterModal.vue';
-
-const showPlus = ref(false);
-const showModal = ref(false);
-
-const openModal = () => {
-  showModal.value = true;
-};
-
-const closeModal = () => {
-  showModal.value = false;
-};
-
-const submitSchedule = (scheduleTitle) => {
-  console.log('새 스케줄 제목:', scheduleTitle);
-  // 여기에서 스케줄 등록 로직을 처리할 수 있습니다.
-  closeModal(); // 등록 후 모달 닫기
-};
-</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
