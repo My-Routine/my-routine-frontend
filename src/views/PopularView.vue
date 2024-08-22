@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import Sidebar from '@/components/Sidebar.vue'; // Sidebar 컴포넌트
-import Navbar from '@/components/Navbar.vue'; // Navbar 컴포넌트
+import Sidebar from '@/components/Sidebar.vue';
+import Navbar from '@/components/Navbar.vue';
+import EmptyHeart from '@/assets/img/heart-empty.svg'; // 빈 하트 이미지
+import FillHeart from '@/assets/img/heart-fill.svg'; // 채워진 하트 이미지
+import Swal from 'sweetalert2';
 
 const { VITE_REQUEST_URL } = import.meta.env;
 
@@ -11,49 +14,96 @@ const totalPages = ref(0);
 const currentPage = ref(1);
 const size = ref(10);
 
-const fetchSchedules = async (page = 1) => {
-  try {
-    const response = await axios.get(`${VITE_REQUEST_URL}/likes/schedules/most-liked`, {
+// 스케줄 목록을 가져오는 함수
+const fetchUserLikedSchedules = (page = 1) => {
+  axios
+    .get(`${VITE_REQUEST_URL}/schedules/popular`, {
       params: {
         page: page - 1,
         size: size.value
       }
+    })
+    .then((response) => {
+      if (response.headers['content-type'] && response.headers['content-type'].includes('application/json')) {
+        schedules.value = response.data.content;
+        totalPages.value = response.data.page.totalPages;
+        currentPage.value = page;
+
+        if (schedules.value.length === 0) {
+          alert('좋아하는 스케줄이 없습니다.');
+        }
+      } else {
+        console.error('Unexpected response type:', response.headers['content-type']);
+      }
+    })
+    .catch((err) => {
+      console.error('Error fetching schedules:', err);
     });
+};
 
-    if (response.headers['content-type'] && response.headers['content-type'].includes('application/json')) {
-      schedules.value = response.data.content;
-      totalPages.value = response.data.page.totalPages;
-      currentPage.value = page;
-
-      console.log('Schedules:', schedules.value);
-      console.log('Total Pages:', totalPages.value);
-      console.log('Current Page:', currentPage.value);
-    } else {
-      console.error('Unexpected response type:', response.headers['content-type']);
-    }
-  } catch (err) {
-    console.error('Error fetching schedules:', err);
+// 좋아요 등록/삭제 처리 함수
+const toggleLike = (schedule) => {
+  if (schedule.likeStatus) {
+    axios
+      .delete(`${VITE_REQUEST_URL}/likes/schedules/${schedule.id}`)
+      .then(() => {
+        fetchUserLikedSchedules(currentPage.value); // 좋아요 삭제 후 최신 목록 가져오기
+        Swal.fire({
+          icon: 'success',
+          title: '좋아요 취소했습니다',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      })
+      .catch((err) => {
+        console.error('좋아요 삭제 중 오류:', err);
+        Swal.fire({
+          icon: 'error',
+          title: '좋아요 취소 중 오류가 발생했습니다',
+          text: err.response?.data?.message || '네트워크 문제일 수 있습니다. 다시 시도해 주세요.',
+        });
+      });
+  } else {
+    axios
+      .post(`${VITE_REQUEST_URL}/likes/schedules/${schedule.id}`)
+      .then(() => {
+        fetchUserLikedSchedules(currentPage.value); // 좋아요 등록 후 최신 목록 가져오기
+        Swal.fire({
+          icon: 'success',
+          title: '좋아요 했습니다',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      })
+      .catch((err) => {
+        console.error('좋아요 등록 중 오류:', err);
+        Swal.fire({
+          icon: 'error',
+          title: '좋아요 등록 중 오류가 발생했습니다',
+          text: err.response?.data?.message || '네트워크 문제일 수 있습니다. 다시 시도해 주세요.',
+        });
+      });
   }
 };
 
 onMounted(() => {
-  fetchSchedules();
+  fetchUserLikedSchedules();
 });
 
 const previousPage = () => {
   if (currentPage.value > 1) {
-    fetchSchedules(currentPage.value - 1);
+    fetchUserLikedSchedules(currentPage.value - 1);
   }
 };
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
-    fetchSchedules(currentPage.value + 1);
+    fetchUserLikedSchedules(currentPage.value + 1);
   }
 };
 
 const goToPage = (page) => {
-  fetchSchedules(page);
+  fetchUserLikedSchedules(page);
 };
 
 const getPageNumbers = () => {
@@ -77,20 +127,23 @@ const getPageNumbers = () => {
 
 <template>
   <div id="app">
-    <Sidebar />
-    <Navbar />
     <div class="main-content">
       <div class="header">
-        <span>인기 스케줄</span>
+        <span>인기스케줄</span>
       </div>
       <div class="content">
         <div v-if="schedules.length" class="schedule-list">
-          <div class="schedule-item" v-for="item in schedules" :key="item.scheduleId">
-            <div>{{ item.scheduleTitle }}</div>
-            <div class="profile">
-              <div class="user-info">{{ item.userNickname }}</div>
+          <div class="schedule-item" v-for="item in schedules" :key="item.id">
+            <div class="schedule-info">
+              <div>{{ item.title }}</div>
+              <div class="profile">
+                <div class="user-info">by {{ item.user.nickname }}</div>
+              </div>
             </div>
-            <div class="like-count">좋아요 {{ item.likeCount }}</div>
+            <div class="like-section" @click="toggleLike(item)">
+              <img :src="item.likeStatus ? FillHeart : EmptyHeart" alt="heart icon" class="heart-icon" />
+              <span class="like-count">{{ item.likeCount }}개</span>
+            </div>
           </div>
         </div>
         <div v-if="totalPages > 1" class="pagination">
@@ -108,109 +161,138 @@ const getPageNumbers = () => {
 <style scoped>
 #app {
   display: flex;
-  height: 100vh;
-  width: 100vw;
-}
-
-.sidebar-container {
-  width: 250px; /* 사이드바의 고정 너비 */
+  justify-content: center;
+  padding: 20px;
 }
 
 .main-content {
-  margin-left: 250px; /* 사이드바 너비만큼 왼쪽 여백을 설정 */
-  padding-top: 100px; /* 네브바 높이만큼 상단 여백을 설정 */
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .header {
-  display: flex;
-  justify-content: center;
+  background-color: #f1f1f1;
   padding: 20px;
-  background-color: white; /* 사이드바 배경색과 동일하게 설정 */
-  color: #555;
-  font-weight: bold;
-  font-size: 150%;
+  border-radius: 20px;
+  font-size: 25px;
+  font-family: '굴림', 'Gulim', Arial, sans-serif; /* 굴림체 적용 */
+  font-weight: bold; /* 글자 두께 굵게 */
+  color: #2c3e50; /* 어두운 색상으로 텍스트 색상 조정 */
+  letter-spacing: 1px; /* 글자 간격 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.header:hover {
+  color: #3498db; /* 호버 시 색상 변화 */
+  transform: translateY(-5px); /* 호버 시 살짝 위로 이동 */
 }
 
 .content {
+  background-color: #f9f9f9;
   padding: 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: #F9FBFF;
   border-radius: 15px;
-  margin: 20px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .schedule-list {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .schedule-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
+  padding: 15px;
   background-color: #FFF;
   border: 1px solid #ddd;
   border-radius: 10px;
-  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
 }
 
-.profile {
+.schedule-list {
   display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.schedule-item {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 15px;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  transition: transform 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.schedule-item:hover {
+  transform: scale(1.02);
+}
+
+.schedule-info h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #34495e;
 }
 
 .user-info {
-  font-size: 14px;
-  color: #333;
+  font-size: 18px;
+  color: #888;
 }
 
-.like-count {
-  background-color: #F0F0F0;
-  padding: 5px 10px;
-  border-radius: 5px;
+.like-section {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.heart-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 5px;
 }
 
 .pagination {
   display: flex;
   justify-content: center;
-  align-items: center;
   margin-top: 20px;
 }
 
 .pagination-btn,
 .page-number {
-  background-color: #f1efe7; /* 사이드바 배경색과 일치 */
+  background-color: #f1efe7;
   border: none;
-  color: black; /* 텍스트 색상 */
+  color: black;
   padding: 10px 15px;
   margin: 0 5px;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.3s;
-  min-width: 40px; /* 최소 너비 설정 */
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .pagination-btn:hover,
 .page-number:hover {
-  background-color: #dcd8c7; /* 호버 시 색상 */
+  background-color: #dcd8c7;
   transform: scale(1.1);
 }
 
 .page-number.active {
-  background-color: #dcd8c7; /* 활성화된 페이지 번호 색상 */
+  background-color: #dcd8c7;
   font-weight: bold;
 }
 
 .page-number.active:hover {
-  transform: none; /* 활성화된 페이지 번호 호버 시 크기 변화 없음 */
+  transform: none;
 }
 </style>

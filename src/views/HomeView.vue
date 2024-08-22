@@ -4,6 +4,8 @@ import 'vue3-carousel/dist/carousel.css';
 
 const imageCount = 6; // 이미지 파일의 총 개수를 설정하세요.
 const images = Array.from({ length: imageCount }, (_, i) => new URL(`../assets/homeImgResources/image${i + 1}.png`, import.meta.url).href);
+
+
 </script>
 
 <template>
@@ -22,7 +24,6 @@ const images = Array.from({ length: imageCount }, (_, i) => new URL(`../assets/h
         <img :src="image" :alt="`루틴 이미지 ${index + 1}`">
       </Slide>
     </Carousel>
-  
   </main>
 </template>
 
@@ -48,7 +49,6 @@ body {
   color: #333;
   margin-bottom: 30px;
 }
-
 .banner .btn-start {
   display: inline-block;
   padding: 12px 24px;
@@ -65,6 +65,7 @@ body {
 .banner .btn-start:hover {
   background-color: #0097a7;
 }
+
 
 .image-slider img {
   width: 100%; /* 슬라이드 내 이미지가 가로로 100% 채워지도록 설정 */

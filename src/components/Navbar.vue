@@ -24,7 +24,7 @@ const logout = async () => {
 </script>
 
 <template>
-    <div class="container d-flex justify-content-end align-items-center">
+    <div class="w-100 h-10 d-flex justify-content-end align-items-center">
         <div v-if="!isAuthenticatedRef" class="m-3">
             <RouterLink :to="{ name: 'login' }" class="text-decoration-none">로그인</RouterLink>
           </div>
@@ -41,6 +41,7 @@ const logout = async () => {
 </template>
 
 <style scoped>
+
 .container {
     height: 10vh;
     width: calc(100vw - 250px);
@@ -55,13 +56,14 @@ const logout = async () => {
     width: 140px;
 }
 
+
 a {
-    color: black;
-    text-decoration: none;
-  }
-  
-  a:hover {
-    color: #2595cd;
-  }
-  </style>
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #2595cd;
+}
+</style>
   

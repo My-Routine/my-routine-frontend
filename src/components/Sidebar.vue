@@ -1,3 +1,30 @@
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import ModalComponent from '@/components/modal/ScheduleRegisterModal.vue';
+
+const showPlus = ref(false);
+const showModal = ref(false);
+
+const router = useRouter() 
+
+const openModal = () => {
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
+};
+
+const submitSchedule = (scheduleId) => {
+  // 여기에서 스케줄 등록 로직을 처리할 수 있습니다.
+  closeModal(); // 등록 후 모달 닫기
+  router.push({name:"scheduleDetail", params:{scheduleId}})
+  // console.log("스케줄 타이틀 : ", scheduleId);
+
+};
+</script>
+
 <template>
   <div class="sidebar-container">
     <!-- logo -->
@@ -12,33 +39,41 @@
         <i class="fas fa-home"></i>
         <span>홈</span>
       </RouterLink>
-      <RouterLink :to="{ name: 'mySchedules' }" class="menu-link">
+
+      <!-- 스케줄 링크 -->
+      <RouterLink 
+        :to="{ name: 'scheduleList' }" 
+        class="menu-link" 
+        @mouseover="showPlus = true" 
+        @mouseleave="showPlus = false"
+      >
         <i class="fas fa-calendar-alt"></i>
-        <span>내 스케줄 목록</span>
+        <span class="menu-text">
+          스케줄
+          <span v-if="showPlus" class="plus-icon" @click="openModal">+</span>
+        </span>
       </RouterLink>
-      <RouterLink :to="{ name: 'makeSchedule' }" class="menu-link">
-        <i class="fas fa-plus-circle"></i>
-        <span>스케줄 만들기</span>
-      </RouterLink>
+
       <RouterLink :to="{ name: 'myInterests' }" class="menu-link">
         <i class="fas fa-heart"></i>
-        <span>내 관심</span>
+        <span>내 관심 스케줄</span>
       </RouterLink>
+
       <RouterLink :to="{ name: 'popularSchedules' }" class="menu-link">
         <i class="fas fa-star"></i>
         <span>인기 스케줄</span>
       </RouterLink>
-      <RouterLink :to="{ name: 'myDashboard' }" class="menu-link">
-        <i class="fas fa-chart-line"></i>
-        <span>내 통계</span>
-      </RouterLink>
     </div>
+
+    <!-- 모달 컴포넌트 사용 -->
+    <ModalComponent 
+      v-if="showModal" 
+      title="새 스케줄 추가" 
+      @close="closeModal" 
+      @submit="submitSchedule"
+    />
   </div>
 </template>
-
-<script setup>
-import { RouterLink } from 'vue-router';
-</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
@@ -46,7 +81,7 @@ import { RouterLink } from 'vue-router';
 
 .sidebar-container {
   background-color: #f1efe7; /* 세련된 회색 배경 */
-  height: 100vh;
+  height: 200vh;
   width: 250px; /* 너비 설정 */
   display: flex;
   flex-direction: column;
@@ -101,6 +136,19 @@ import { RouterLink } from 'vue-router';
 
 .menu-link span {
   margin-left: 10px;
+}
+
+.menu-text {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+
+.plus-icon {
+  margin-left: auto; /* 텍스트와 간격을 넓히기 위해 자동 마진 적용 */
+  padding-right: 10px; /* 오른쪽 끝으로 이동 */
+  font-size: 20px;
 }
 
 a {

@@ -21,15 +21,18 @@ const router = createRouter({
       component: () => import('@/views/SignupView.vue')
     },
     {
-      path: '/schedule/register',
-      name: 'makeSchedule',
-      component: () => import('@/views/ScheduleRegisterView.vue'),
-       meta: { requiresAuth: true }
+
+      path: '/schedule',
+      name: 'scheduleList',
+      component: () => import('@/views/ScheduleListView.vue'),
+      // meta: { requiresAuth: true }
     },
     {
-      path: '/schedule/:scheduleId/update',
-      name: 'updateSchedule',
-      component: () => import('@/views/ScheduleRegisterView.vue')
+      path: '/schedule/:scheduleId',
+      name: 'scheduleDetail',
+      component: () => import('@/views/ScheduleDetailView.vue'),
+      // meta: { requiresAuth: true }
+      props: true
     },
     {
       path: '/my',
@@ -38,10 +41,9 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/my/schedule',
-      name: 'mySchedules',
-      component: () => import('@/views/MySchedulesView.vue'),
-       meta: { requiresAuth: true }
+      path: '/day-schedule',
+      name: 'dayScheduleList',
+      component: () => import('@/components/day-schedule/DayScheduleWithCircle.vue')
     },
     {
       path: '/my/interests',
@@ -58,8 +60,8 @@ const router = createRouter({
       path: '/my/dashboard',
       name: 'myDashboard',
       component: () => import('@/views/MyDashboardView.vue'),
-      meta: { requiresAuth: true }
-    }, 
+  
+    },
   ]
 });
 
