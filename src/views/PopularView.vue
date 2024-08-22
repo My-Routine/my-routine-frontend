@@ -1,13 +1,12 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/api/axios';
 import Sidebar from '@/components/Sidebar.vue';
 import Navbar from '@/components/Navbar.vue';
 import EmptyHeart from '@/assets/img/heart-empty.svg'; // 빈 하트 이미지
 import FillHeart from '@/assets/img/heart-fill.svg'; // 채워진 하트 이미지
 import Swal from 'sweetalert2';
 
-const { VITE_REQUEST_URL } = import.meta.env;
 
 const schedules = ref([]);
 const totalPages = ref(0);
@@ -17,7 +16,7 @@ const size = ref(10);
 // 스케줄 목록을 가져오는 함수
 const fetchUserLikedSchedules = (page = 1) => {
   axios
-    .get(`${VITE_REQUEST_URL}/schedules/popular`, {
+    .get(`/schedules/popular`, {
       params: {
         page: page - 1,
         size: size.value
@@ -45,7 +44,7 @@ const fetchUserLikedSchedules = (page = 1) => {
 const toggleLike = (schedule) => {
   if (schedule.likeStatus) {
     axios
-      .delete(`${VITE_REQUEST_URL}/likes/schedules/${schedule.id}`)
+      .delete(`/likes/schedules/${schedule.id}`)
       .then(() => {
         fetchUserLikedSchedules(currentPage.value); // 좋아요 삭제 후 최신 목록 가져오기
         Swal.fire({
@@ -65,7 +64,7 @@ const toggleLike = (schedule) => {
       });
   } else {
     axios
-      .post(`${VITE_REQUEST_URL}/likes/schedules/${schedule.id}`)
+      .post(`/likes/schedules/${schedule.id}`)
       .then(() => {
         fetchUserLikedSchedules(currentPage.value); // 좋아요 등록 후 최신 목록 가져오기
         Swal.fire({

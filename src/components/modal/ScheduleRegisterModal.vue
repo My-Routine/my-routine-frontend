@@ -1,6 +1,6 @@
 <script setup>
 import { ref, defineProps, defineEmits } from 'vue';
-import axios from 'axios';
+import axios from '@/api/axios';
 import Swal from 'sweetalert2';
 
 const props = defineProps({
@@ -14,10 +14,9 @@ const emits = defineEmits(['close', 'submit']);
 
 const inputValue = ref('');
 
-const VITE_REQUEST_URL = import.meta.env.VITE_REQUEST_URL;
 
 const submit = () => {
-  axios.post(`${VITE_REQUEST_URL}/schedules`, {
+  axios.post(`/schedules`, {
     title: inputValue.value
   })
   .then(({data}) => {

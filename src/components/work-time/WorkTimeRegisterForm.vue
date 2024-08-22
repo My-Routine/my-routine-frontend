@@ -1,10 +1,9 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 import { ref, watch } from 'vue';
-import axios from 'axios';
+import axios from '@/api/axios';
 import { showSuccessAlert, showWarningAlert } from "@/utils/alert";
 
-const { VITE_REQUEST_URL } = import.meta.env;
 const route = useRoute();
 const router = useRouter();
 const props = defineProps({
@@ -29,7 +28,7 @@ const registerForm = ref({
 
 // 큰 카테고리 목록 가져오기
 const getAllLargeCategories = () => {
-  axios.get(`${VITE_REQUEST_URL}/work-categories-large`)
+  axios.get(`/work-categories-large`)
     .then(({ data }) => {
       largeCategories.value = data;
     });
@@ -38,7 +37,7 @@ const getAllLargeCategories = () => {
 // 작은 카테고리 목록 가져오기
 const getSmallCategoriesByLargeCategoryId = () => {
   if (registerForm.value.largeCategoryId) {
-    axios.get(`${VITE_REQUEST_URL}/work-categories-large/${registerForm.value.largeCategoryId}/work-categories-small`)
+    axios.get(`/work-categories-large/${registerForm.value.largeCategoryId}/work-categories-small`)
       .then(({ data }) => {
         smallCategories.value = data;
       });
@@ -48,7 +47,7 @@ const getSmallCategoriesByLargeCategoryId = () => {
 // 작업 목록 가져오기
 const getWorksBySmallCategoryId = () => {
   if (registerForm.value.smallCategoryId) {
-    axios.get(`${VITE_REQUEST_URL}/work-small-categories/${registerForm.value.smallCategoryId}/works`)
+    axios.get(`/work-small-categories/${registerForm.value.smallCategoryId}/works`)
       .then(({ data }) => {
         works.value = data;
       });
@@ -61,7 +60,7 @@ const registerWorkTime = () => {
     return;
   }
 
-  axios.post(`${VITE_REQUEST_URL}/schedules/${props.scheduleId}/day-schedules/day/${props.day}/work-times`, registerForm.value)
+  axios.post(`/schedules/${props.scheduleId}/day-schedules/day/${props.day}/work-times`, registerForm.value)
     .then(() => {
       showSuccessAlert('작업이 성공적으로 등록되었습니다',
         () => {

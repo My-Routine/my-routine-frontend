@@ -5,9 +5,8 @@ import DayScheduleWithCircle from '@/components/day-schedule/DayScheduleWithCirc
 import WorkTimeRegisterForm from '@/components/work-time/WorkTimeRegisterForm.vue';
 import WorkTimeUpdateForm from '@/components/work-time/WorkTimeUpdateForm.vue';
 import Swal from 'sweetalert2';
-import axios from 'axios';
+import axios from '@/api/axios';
 
-const { VITE_REQUEST_URL } = import.meta.env;
 const router = useRouter();
 const route = useRoute();
 const modalStatus = ref(""); // REGISTER, UPDATE
@@ -58,7 +57,7 @@ const dayOfWeeks = [
 ];
 
 const getSchedule = () => {
-    axios.get(`${VITE_REQUEST_URL}/schedules/${route.params.scheduleId}`)
+    axios.get(`/schedules/${route.params.scheduleId}`)
         .then(({ data }) => {
             // console.log("schedule:", data);
             schedule.value = data
@@ -71,7 +70,7 @@ const getSchedule = () => {
 getSchedule();
 
 const changeTitle = () => {
-    axios.put(`${VITE_REQUEST_URL}/schedules/${route.params.scheduleId}`, {
+    axios.put(`/schedules/${route.params.scheduleId}`, {
         title: inputTitle.value // 서버로 보낼 새 제목
     })
     .then(() => {
