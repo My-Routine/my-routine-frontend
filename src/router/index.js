@@ -8,7 +8,7 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('@/views/HomeView.vue'),
-      // meta: { requiresAuth: true }
+       meta: { requiresAuth: true }
     },
     {
       path: '/login',
@@ -24,7 +24,7 @@ const router = createRouter({
       path: '/schedule/register',
       name: 'makeSchedule',
       component: () => import('@/views/ScheduleRegisterView.vue'),
-      // meta: { requiresAuth: true }
+       meta: { requiresAuth: true }
     },
     {
       path: '/schedule/:scheduleId/update',
@@ -35,19 +35,19 @@ const router = createRouter({
       path: '/my',
       name: 'myPage',
       component: () => import('@/views/MyPageView.vue'),
-      //meta: { requiresAuth: true }
+      meta: { requiresAuth: true }
     },
     {
       path: '/my/schedule',
       name: 'mySchedules',
       component: () => import('@/views/MySchedulesView.vue'),
-      // meta: { requiresAuth: true }
+       meta: { requiresAuth: true }
     },
     {
       path: '/my/interests',
       name: 'myInterests',
       component: () => import('@/views/MyInterestsView.vue'),
-      // meta: { requiresAuth: true }
+      meta: { requiresAuth: true }
     },
     {
       path: '/popular',
@@ -58,7 +58,7 @@ const router = createRouter({
       path: '/my/dashboard',
       name: 'myDashboard',
       component: () => import('@/views/MyDashboardView.vue'),
-      // meta: { requiresAuth: true }
+      meta: { requiresAuth: true }
     }, 
   ]
 });

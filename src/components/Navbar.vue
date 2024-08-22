@@ -43,7 +43,7 @@ const logout = async () => {
 <style scoped>
 .container {
     height: 10vh;
-    width: calc(100vw - 200px);
+    width: calc(100vw - 250px);
 }
 
 
