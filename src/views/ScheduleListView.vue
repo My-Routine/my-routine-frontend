@@ -1,12 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import axios from '@/api/axios';
 import { useRouter } from 'vue-router';
 import EmptyHeart from '@/assets/img/heart-empty.svg';
 import FillHeart from '@/assets/img/heart-fill.svg';
 import Swal from 'sweetalert2';
 
-const { VITE_REQUEST_URL } = import.meta.env;
 const router = useRouter();
 
 const schedules = ref([]);
@@ -22,7 +21,7 @@ const showModal = ref(false);
 // 유저 스케줄 목록 가져오기 함수
 const fetchUserSchedules = async (page = 1) => {
   axios
-    .get(`${VITE_REQUEST_URL}/schedules`, {
+    .get(`/schedules`, {
       params: {
         type: "MY",
         page: page - 1,
@@ -93,7 +92,7 @@ const toggleLike = (index, scheduleId) => {
 
   if (isLiked) {
     axios
-      .delete(`${VITE_REQUEST_URL}/likes/schedules/${scheduleId}`)
+      .delete(`/likes/schedules/${scheduleId}`)
       .then(() => {
         likedSchedules.value[index] = false;
         likeCounts.value[scheduleId]--;
@@ -118,7 +117,7 @@ const toggleLike = (index, scheduleId) => {
       });
   } else {
     axios
-      .post(`${VITE_REQUEST_URL}/likes/schedules/${scheduleId}`)
+      .post(`/likes/schedules/${scheduleId}`)
       .then(() => {
         likedSchedules.value[index] = true;
         likeCounts.value[scheduleId]++;
@@ -165,7 +164,7 @@ const editSchedule = () => {
 const deleteSchedule = () => {
   if (selectedSchedule.value && selectedSchedule.value.id) {
     axios
-      .delete(`${VITE_REQUEST_URL}/schedules/${selectedSchedule.value.id}`)
+      .delete(`/schedules/${selectedSchedule.value.id}`)
       .then(() => {
         schedules.value = schedules.value.filter(schedule => schedule.id !== selectedSchedule.value.id);
         closeModal();

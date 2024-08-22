@@ -1,10 +1,9 @@
 <script setup>
 import { useRoute, useRouter } from 'vue-router';
 import { onMounted, ref, toRaw, watch } from 'vue';
-import axios from 'axios';
+import axios from '@/api/axios';
 import { showSuccessAlert, showWarningAlert } from "@/utils/alert";
 
-const { VITE_REQUEST_URL } = import.meta.env;
 const route = useRoute();
 const router = useRouter();
 
@@ -37,7 +36,7 @@ const props = defineProps({
 
 // 큰 카테고리 목록 가져오기
 const getAllLargeCategories = () => {
-  axios.get(`${VITE_REQUEST_URL}/work-categories-large`)
+  axios.get(`/work-categories-large`)
     .then(({ data }) => {
       largeCategories.value = data;
     });
@@ -46,7 +45,7 @@ const getAllLargeCategories = () => {
 // 작은 카테고리 목록 가져오기
 const getSmallCategoriesByLargeCategoryId = () => {
   if (updateForm.value.largeCategoryId) {
-    axios.get(`${VITE_REQUEST_URL}/work-categories-large/${updateForm.value.largeCategoryId}/work-categories-small`)
+    axios.get(`/work-categories-large/${updateForm.value.largeCategoryId}/work-categories-small`)
       .then(({ data }) => {
         smallCategories.value = data;
       });
@@ -56,7 +55,7 @@ const getSmallCategoriesByLargeCategoryId = () => {
 // 작업 목록 가져오기
 const getWorksBySmallCategoryId = () => {
   if (updateForm.value.smallCategoryId) {
-    axios.get(`${VITE_REQUEST_URL}/work-small-categories/${updateForm.value.smallCategoryId}/works`)
+    axios.get(`/work-small-categories/${updateForm.value.smallCategoryId}/works`)
       .then(({ data }) => {
         works.value = data;
       });
@@ -69,7 +68,7 @@ const updateWorkTime = () => {
     return;
   }
 
-  axios.put(`${VITE_REQUEST_URL}/schedules/work-times/${props.selectedWorkTime.workTimeId}`, updateForm.value)
+  axios.put(`/schedules/work-times/${props.selectedWorkTime.workTimeId}`, updateForm.value)
     .then(() => {
       showSuccessAlert('작업이 성공적으로 수정되었습니다.',
         () => {
@@ -82,7 +81,7 @@ const updateWorkTime = () => {
 };
 
 const deleteWorkTime = () => {
-  axios.delete(`${VITE_REQUEST_URL}/schedules/work-times/${props.selectedWorkTime.workTimeId}`)
+  axios.delete(`/schedules/work-times/${props.selectedWorkTime.workTimeId}`)
     .then(() => {
       showSuccessAlert('작업이 삭제되었습니다.',
         () => {

@@ -1,9 +1,8 @@
 <script setup>
-const { VITE_REQUEST_URL } = import.meta.env;
 import { useRoute } from 'vue-router';
 import { Chart, registerables } from 'chart.js';
 import { ref, watch, nextTick } from 'vue';
-import axios from 'axios';
+import axios from '@/api/axios';
 
 Chart.register(...registerables); // Pie Chart를 사용할 수 있도록 Chart.js에 컨트롤러 등록
 const emit = defineEmits(['clickWorkTime', 'clickEmptyWorkTime'])
@@ -33,7 +32,7 @@ const selectedWorkTime = ref({
 let chartInstance = null;
 
 const getWorkTimes = () => {
-  axios.get(`${VITE_REQUEST_URL}/schedules/${route.params.scheduleId}/day/${(route.query.day != null && route.query.day != undefined) ? route.query.day : 1}/work-times`)
+  axios.get(`/schedules/${route.params.scheduleId}/day/${(route.query.day != null && route.query.day != undefined) ? route.query.day : 1}/work-times`)
     .then(({ data }) => {
       workTimes.value = data;
     }).catch((error) => {
