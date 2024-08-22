@@ -59,6 +59,16 @@ watch(workTimes, () => {
   let currentEndMinutes = timeToMinutes("00:00:00");
   const endOfDayMinutes = timeToMinutes("24:00:00");
 
+  if (workTimes.value.length === 0) {
+    // **추가된 부분 시작**: 스케줄이 비어있을 경우 24시간을 빈 시간으로 채움
+    workTimesIncludeEmpty.value.push({
+      workTitle: emptyWorkTitle,
+      startAt: "00:00:00",
+      endAt: "24:00:00",
+      duration: endOfDayMinutes - currentEndMinutes,
+    });
+  }
+
   // 
   workTimes.value.forEach((workTime) => {
     console.log("workTime.startAt: ", workTime.startAt)

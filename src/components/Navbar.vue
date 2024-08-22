@@ -19,10 +19,10 @@ const logout = async () => {
 <template>
     <div class="w-100 h-10 d-flex justify-content-end align-items-center">
         <div v-if="!isAuthenticatedRef" class="m-3">
-            <RouterLink :to="{ name: 'login' }" class="text-decoration-none">로그인</RouterLink>
+            <RouterLink :to="{ name: 'login' }" class="text-decoration-none">형선</RouterLink>
           </div>
           <div v-if="!isAuthenticatedRef" class="m-3">
-            <RouterLink :to="{ name: 'signup' }" class="text-decoration-none">회원가입</RouterLink>
+            <RouterLink :to="{ name: 'signup' }" class="text-decoration-none">로그아웃</RouterLink>
           </div>
           <div v-if="isAuthenticatedRef" class="m-3">
             <span>{{ nickname }}</span>

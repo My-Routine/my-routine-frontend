@@ -97,9 +97,24 @@ const toggleLike = (index, scheduleId) => {
       .then(() => {
         likedSchedules.value[index] = false;
         likeCounts.value[scheduleId]--;
+
+        Swal.fire({
+          title: '좋아요 취소',
+          text: '좋아요가 취소되었습니다.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        });
       })
       .catch((err) => {
         console.error(err);
+
+        Swal.fire({
+          title: '에러!',
+          text: '좋아요 취소 중 문제가 발생했습니다. 다시 시도해 주세요.',
+          icon: 'error',
+          confirmButtonText: '확인'
+        });
       });
   } else {
     axios
@@ -107,9 +122,24 @@ const toggleLike = (index, scheduleId) => {
       .then(() => {
         likedSchedules.value[index] = true;
         likeCounts.value[scheduleId]++;
+
+        Swal.fire({
+          title: '좋아요',
+          text: '좋아요가 등록되었습니다.',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500
+        });
       })
       .catch((err) => {
         console.error(err);
+
+        Swal.fire({
+          title: '에러!',
+          text: '좋아요 등록 중 문제가 발생했습니다. 다시 시도해 주세요.',
+          icon: 'error',
+          confirmButtonText: '확인'
+        });
       });
   }
 };

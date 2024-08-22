@@ -21,12 +21,15 @@ if (route.query.day) {
     selectedDay.value = 1;
 }
 onMounted(() => {
+    if (route.query.day) {
+    selectedDay.value = route.query.day;
+} else {
+    selectedDay.value = 1;
+}
 })
-
 watch(selectedDay, () => {
     router.push({ name: 'scheduleDetail', query: { day: selectedDay.value } });
 },{immediate: true})
-
 const schedule = ref({
     id: Number,
     title: String,
@@ -89,6 +92,7 @@ const changeTitle = () => {
         });
     });
 };
+
 
 </script>
 <template>

@@ -5,6 +5,7 @@ import Sidebar from '@/components/Sidebar.vue';
 import Navbar from '@/components/Navbar.vue';
 import EmptyHeart from '@/assets/img/heart-empty.svg'; // 빈 하트 이미지
 import FillHeart from '@/assets/img/heart-fill.svg'; // 채워진 하트 이미지
+import Swal from 'sweetalert2';
 
 const { VITE_REQUEST_URL } = import.meta.env;
 
@@ -47,18 +48,40 @@ const toggleLike = (schedule) => {
       .delete(`${VITE_REQUEST_URL}/likes/schedules/${schedule.id}`)
       .then(() => {
         fetchUserLikedSchedules(currentPage.value); // 좋아요 삭제 후 최신 목록 가져오기
+        Swal.fire({
+          icon: 'success',
+          title: '좋아요 취소했습니다',
+          showConfirmButton: false,
+          timer: 1500
+        });
       })
       .catch((err) => {
         console.error('좋아요 삭제 중 오류:', err);
+        Swal.fire({
+          icon: 'error',
+          title: '좋아요 취소 중 오류가 발생했습니다',
+          text: err.response?.data?.message || '네트워크 문제일 수 있습니다. 다시 시도해 주세요.',
+        });
       });
   } else {
     axios
       .post(`${VITE_REQUEST_URL}/likes/schedules/${schedule.id}`)
       .then(() => {
         fetchUserLikedSchedules(currentPage.value); // 좋아요 등록 후 최신 목록 가져오기
+        Swal.fire({
+          icon: 'success',
+          title: '좋아요 했습니다',
+          showConfirmButton: false,
+          timer: 1500
+        });
       })
       .catch((err) => {
         console.error('좋아요 등록 중 오류:', err);
+        Swal.fire({
+          icon: 'error',
+          title: '좋아요 등록 중 오류가 발생했습니다',
+          text: err.response?.data?.message || '네트워크 문제일 수 있습니다. 다시 시도해 주세요.',
+        });
       });
   }
 };

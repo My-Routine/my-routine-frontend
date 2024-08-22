@@ -81,7 +81,7 @@ const submitSchedule = (scheduleId) => {
 
 .sidebar-container {
   background-color: #f1efe7; /* 세련된 회색 배경 */
-  height: 100vh;
+  height: 200vh;
   width: 250px; /* 너비 설정 */
   display: flex;
   flex-direction: column;
